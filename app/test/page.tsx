@@ -1,10 +1,12 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import Link from 'next/link';
+import { useApiResult } from '../context/ApiResultContext';
+import Card from '../components/Card';
 
 export default function TestPage() {
-  const [apiResult, setApiResult] = useState<{ count: number; message: string } | null>(null);
+  const { apiResult, setApiResult } = useApiResult();
 
   const handleApiCall = useCallback(async () => {
     try {
@@ -15,7 +17,7 @@ export default function TestPage() {
       console.error('Error calling API:', error);
       setApiResult(null);
     }
-  }, []);
+  }, [setApiResult]);
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center p-24">
@@ -29,13 +31,20 @@ export default function TestPage() {
         </button>
       </div>
       {apiResult && (
-        <div className="mt-4 p-4 border rounded">
-          <h3 className="font-bold">API Result:</h3>
-          <p>Message: {apiResult.message}</p>
-          <p>Count: {apiResult.count}</p>
-        </div>
+        <Card
+          title="API Result"
+          content={`Message: ${apiResult.message}\nCount: ${apiResult.count}`}
+          footer="API Response"
+        />
       )}
-      <div className="mt-8 flex space-x-4">
+      <div className="mt-8">
+        <Card
+          title="Navigation"
+          content="Use these links to navigate between pages."
+          footer="Links"
+        />
+      </div>
+      <div className="mt-4 flex space-x-4">
         <Link href="/" className="text-blue-500 hover:underline">
           Back to Home
         </Link>
